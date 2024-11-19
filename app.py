@@ -42,9 +42,8 @@ st.subheader('Paste your Job Description here:')
 # Text area for JD input
 job_description = st.text_area('Enter Job Description', '', height=150)
 
-# Display the entered JD
+# Confirmation message
 if job_description:
-    st.write('You entered the following Job Description:')
-    st.text_area('Job Description Preview:', job_description, height=150)
+    st.success('Job Description received!')
 else:
     st.write('Please enter a Job Description.')
