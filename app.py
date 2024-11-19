@@ -13,11 +13,25 @@ GOOGLE_API_KEY = st.secrets["GEMINI_API_KEY"]
 # Configure the Google Generative AI API with your API key
 genai.configure(api_key=GOOGLE_API_KEY)
 
-# Input field for the medicine name
-st.subheader("Enter Medicine Details:")
-medicine_name = st.text_input('Medicine Name', '')
-
 #Input field for the Resume
 st.subheader('Upload your Resume')
 # File upload for PDF or DOCX
 uploaded_file = st.file_uploader('Upload your Resume (PDF or DOCX)', type=['pdf', 'docx'])
+
+# Handling the uploaded file
+if uploaded_file is not None:
+    if uploaded_file.type == 'application/pdf':
+        # Extract text from PDF
+        pdf_reader = PyPDF2.PdfReader(uploaded_file)
+        extracted_text = ''
+        for page in pdf_reader.pages:
+            extracted_text += page.extract_text()
+        st.text_area('Extracted Resume Text:', extracted_text, height=200)
+
+    elif uploaded_file.type == 'application/vnd.openxmlformats-officedocument.wordprocessingml.document':
+        # Extract text from DOCX
+        doc = Document(uploaded_file)
+        extracted_text = '\n'.join([paragraph.text for paragraph in doc.paragraphs])
+        st.text_area('Extracted Resume Text:', extracted_text, height=200)
+else:
+    st.write('Please upload a file to extract the resume text.')
