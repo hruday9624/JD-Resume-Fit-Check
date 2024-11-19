@@ -18,10 +18,6 @@ st.subheader('Upload your Resume')
 # File upload for PDF or DOCX
 uploaded_file = st.file_uploader('Upload your Resume (PDF or DOCX)', type=['pdf', 'docx'])
 
-#Input field for the JD
-st.subheader('Paste your Job Description here:')
-job_description = st.text_input('Job Description', '')
-
 # Handling the uploaded pdf/doc file
 if uploaded_file is not None:
     if uploaded_file.type == 'application/pdf':
@@ -39,3 +35,16 @@ if uploaded_file is not None:
         st.text_area('Extracted Resume Text:', extracted_text, height=200)
 else:
     st.write('Please upload a file to extract the resume text.')
+
+#Input field for the JD
+st.subheader('Paste your Job Description here:')
+
+# Text area for JD input
+job_description = st.text_area('Enter Job Description', '', height=150)
+
+# Display the entered JD
+if job_description:
+    st.write('You entered the following Job Description:')
+    st.text_area('Job Description Preview:', job_description, height=150)
+else:
+    st.write('Please enter a Job Description.')
