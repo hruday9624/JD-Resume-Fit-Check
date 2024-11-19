@@ -1,7 +1,7 @@
 import streamlit as st
 from docx import Document
 import PyPDF2
-import genai  # Assuming the Gemini client is available as 'genai'
+import google.generativeai as genai  # Correct package for Gemini
 
 # Title of the app
 st.title("JD-Resume Fit Check App")
@@ -62,7 +62,7 @@ if resume_text and job_description:
         5. Provide a match score based on how well the resume aligns with the job description. Include a brief justification for the score.
         """
 
-        # Call the Gemini API (ensure you're using the right method for Gemini)
+        # Call the Gemini API (using google-generativeai)
         try:
             # Generate content using the Gemini API (adjust the model name as needed)
             response = genai.GenerativeModel('gemini-pro').generate_content(prompt)
