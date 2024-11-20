@@ -77,7 +77,14 @@ if resume_text and job_description:
         # Call the Gemini API (using google-generativeai)
         try:
             # Generate content using the Gemini API (adjust the model name as needed)
-            response = genai.GenerativeModel('gemini-pro').generate_content(prompt)
+            response = genai.generate_content(
+                model='gemini-pro',
+                prompt=prompt,
+                temperature=0.3,  # Lower temperature for deterministic results
+                top_p=0.9,        # Nucleus sampling to focus on likely words
+                max_output_tokens=500  # Limit response length for consistent output
+            )
+
             
             # Parse the response (assuming it's a simple text-based response)
             match_score = response.text.strip().split('\n')[0]  # Get the match score (adjust if response format is different)
