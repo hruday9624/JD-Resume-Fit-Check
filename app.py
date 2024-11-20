@@ -72,8 +72,9 @@ if resume_text and job_description:
             justification = '\n'.join(response.text.strip().split('\n')[1:])  # Get justification (adjust if needed)
 
             # Display results
-            st.write(f"**Match Score:** {match_score}/10")
-            st.write(f"**Justification:** {justification}")
+            #st.write(f"**Match Score:** {match_score}/10")
+            #st.write(f"**Justification:** {justification}")
+            st.write(response.text)  # Display the generated response
         
         except Exception as e:
             st.error(f"Error generating match score: {str(e)}")
