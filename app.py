@@ -45,15 +45,24 @@ st.subheader("Fit Check Results")
 
 # Ensure both resume and JD are provided before proceeding
 if resume_text and job_description:
-    
+    # Check for minimum content length
+    if len(resume_text.strip()) < 100 or len(job_description.strip()) < 100:
+        st.error("Please provide more detailed Resume and Job Description.")
+        st.stop()
+
+    # Truncate input if too large
+    max_input_tokens = 4000  # Example limit
+    combined_input = f"{resume_text}\n{job_description}"
+    if len(combined_input.split()) > max_input_tokens:
+        combined_input = ' '.join(combined_input.split()[:max_input_tokens])
+        st.warning("Input text truncated to fit the model's token limit.")
+
     # Display a "Generate" button
     if st.button("Generate Match Score"):
-        
         st.write("Your resume and job description are being processed...")
         
         # Construct the prompt for analysis
         prompt = f"""
-
         You are an expert recruiter and hiring manager assistant. Analyze the following details and provide a structured response in the specified format:
 
         1. Resume: {resume_text}
@@ -74,29 +83,25 @@ if resume_text and job_description:
         4. Interview Preparation Topics: [List relevant topics for interview preparation]
         """
 
-        # Call the Gemini API (using google-generativeai)
         try:
-            # Generate content using the Gemini API (adjust the model name as needed)
-            response = genai.GenerativeModel(
+            # Generate content using the Gemini API
+            response = genai.generate_text(
                 model='gemini-pro',
                 prompt=prompt,
                 temperature=0.3,  # Lower temperature for deterministic results
-                top_p=0.9,        # Nucleus sampling to focus on likely words
-                max_output_tokens=500  # Limit response length for consistent output
+                top_p=0.9,        # Nucleus sampling
+                max_output_tokens=500  # Limit response length
             )
 
-            
-            # Parse the response (assuming it's a simple text-based response)
-            match_score = response.text.strip().split('\n')[0]  # Get the match score (adjust if response format is different)
-            justification = '\n'.join(response.text.strip().split('\n')[1:])  # Get justification (adjust if needed)
-
-            # Display results
-            #st.write(f"**Match Score:** {match_score}/10")
-            #st.write(f"**Justification:** {justification}")
-            st.write(response.text)  # Display the generated response
+            # Ensure response contains text
+            if response and hasattr(response, "text"):
+                st.write(response.text)  # Display the generated response
+            else:
+                st.error("No response received from the API.")
         
         except Exception as e:
-            st.error(f"Error generating match score: {str(e)}")
+            st.error(f"API Error: {str(e)}")
+
 else:
     st.write("Please upload both a resume and a job description.")
 
