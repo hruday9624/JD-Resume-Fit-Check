@@ -55,11 +55,12 @@ if resume_text and job_description:
         prompt = f"""
         You are an expert recruiter and hiring manager assistant. Analyze the following details and provide a match score (0-10) for how well the resume matches the job description:
 
-        1. Analyze this Resume: {resume_text}
+        #1. Analyze this Resume: {resume_text}
         2. Analyze this Job Description: {job_description}
         3. Identify the key skills, experience, and qualifications mentioned in the job description.
         4. Compare the above with the details provided in the resume.
         5. Provide a match score based on how well the resume aligns with the job description. Include a brief justification for the score.
+        6. Suggest some topics for interview preparation
         """
 
         # Call the Gemini API (using google-generativeai)
