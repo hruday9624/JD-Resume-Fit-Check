@@ -53,15 +53,25 @@ if resume_text and job_description:
         
         # Construct the prompt for analysis
         prompt = f"""
-        You are an expert recruiter and hiring manager assistant. Analyze the following details and provide a match score (0-10) for how well the resume matches the job description:
 
-        #1. Analyze this Resume: {resume_text}
-        2. Analyze this Job Description: {job_description}
-        3. Identify the key skills, experience, and qualifications mentioned in the job description.
-        4. Compare the above with the details provided in the resume.
-        5. Provide a match score based on how well the resume aligns with the job description. Include a brief justification for the score.
-        6. Suggest changes in resume to match the job description.
-        7. Suggest some topics for interview preparation.
+        You are an expert recruiter and hiring manager assistant. Analyze the following details and provide a structured response in the specified format:
+
+        1. Resume: {resume_text}
+        2. Job Description: {job_description}
+
+        ### Tasks:
+        1. Identify the key skills, experiences, and qualifications mentioned in the Job Description.
+        2. Compare the above with the details provided in the Resume.
+        3. Provide a match score (out of 10) based on how well the Resume aligns with the Job Description.
+        4. Offer a detailed justification for the match score.
+        5. Suggest changes to improve the Resume so that it matches the Job Description better.
+        6. Recommend relevant topics for interview preparation based on the Job Description.
+        
+        ### Response Format:
+        1. Match Score: [Provide a score out of 10]
+        2. Justification: [Provide a detailed analysis of how well the resume matches the job description]
+        3. Resume Suggestions: [List actionable changes to align the resume with the job description]
+        4. Interview Preparation Topics: [List relevant topics for interview preparation]
         """
 
         # Call the Gemini API (using google-generativeai)
