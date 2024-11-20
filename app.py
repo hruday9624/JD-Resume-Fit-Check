@@ -60,7 +60,8 @@ if resume_text and job_description:
         3. Identify the key skills, experience, and qualifications mentioned in the job description.
         4. Compare the above with the details provided in the resume.
         5. Provide a match score based on how well the resume aligns with the job description. Include a brief justification for the score.
-        6. Suggest some topics for interview preparation
+        6. Suggest changes in resume to match the job description.
+        7. Suggest some topics for interview preparation.
         """
 
         # Call the Gemini API (using google-generativeai)
