@@ -77,7 +77,7 @@ if resume_text and job_description:
         # Call the Gemini API (using google-generativeai)
         try:
             # Generate content using the Gemini API (adjust the model name as needed)
-            response = genai.generate_content(
+            response = genai.GenerativeModel(
                 model='gemini-pro',
                 prompt=prompt,
                 temperature=0.3,  # Lower temperature for deterministic results
