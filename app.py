@@ -90,7 +90,7 @@ if resume_text and job_description:
             
             # Generate content using the Gemini API
             response = genai.generate_content(
-                prompt=prompt,
+                prompt,
                 temperature=0.3,  # Lower temperature for deterministic results
                 top_p=0.9,        # Nucleus sampling
                 max_output_tokens=500  # Limit response length
