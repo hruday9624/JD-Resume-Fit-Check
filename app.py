@@ -20,18 +20,22 @@ with col1:
     st.subheader('Upload your Resume')
     uploaded_file = st.file_uploader('Upload your Resume (PDF or DOCX)', type=['pdf', 'docx'])
     resume_text = ""
-    if uploaded_file is not None:
-        if uploaded_file.type == 'application/pdf':
-            # Extract text from PDF
-            pdf_reader = PyPDF2.PdfReader(uploaded_file)
-            for page in pdf_reader.pages:
-                resume_text += page.extract_text()
-            st.success("Resume uploaded and processed!")
-        elif uploaded_file.type == 'application/vnd.openxmlformats-officedocument.wordprocessingml.document':
-            # Extract text from DOCX
-            doc = Document(uploaded_file)
-            resume_text = '\n'.join([paragraph.text for paragraph in doc.paragraphs])
-            st.success("Resume uploaded and processed!")
+
+    try:
+        if uploaded_file:
+            if uploaded_file.type == 'application/pdf':
+                pdf_reader = PyPDF2.PdfReader(uploaded_file)
+                for page in pdf_reader.pages:
+                    text = page.extract_text()
+                    if text:
+                        resume_text += text
+                st.success("Resume uploaded and processed!")
+            elif uploaded_file.type == 'application/vnd.openxmlformats-officedocument.wordprocessingml.document':
+                doc = Document(uploaded_file)
+                resume_text = '\n'.join([paragraph.text for paragraph in doc.paragraphs if paragraph.text])
+                st.success("Resume uploaded and processed!")
+    except Exception as e:
+        st.error(f"Error processing file: {e}")
 
 # Right column: JD input
 with col2:
@@ -53,29 +57,32 @@ if resume_text and job_description:
     # Truncate input if too large
     max_input_tokens = 4000  # Example limit
     combined_input = f"{resume_text}\n{job_description}"
-    if len(combined_input.split()) > max_input_tokens:
-        combined_input = ' '.join(combined_input.split()[:max_input_tokens])
+    words = combined_input.split()
+    if len(words) > max_input_tokens:
+        combined_input = ' '.join(words[:max_input_tokens])
         st.warning("Input text truncated to fit the model's token limit.")
 
     # Display a "Generate" button
     if st.button("Generate Match Score"):
         st.write("Your resume and job description are being processed...")
-        
+
         # Construct the prompt for analysis
         prompt = f"""
         You are an expert recruiter and hiring manager assistant. Analyze the following details and provide a structured response in the specified format:
 
         1. Resume: {resume_text}
+
         2. Job Description: {job_description}
 
         ### Tasks:
+
         1. Identify the key skills, experiences, and qualifications mentioned in the Job Description.
         2. Compare the above with the details provided in the Resume.
         3. Provide a match score (out of 10) based on how well the Resume aligns with the Job Description.
         4. Offer a detailed justification for the match score.
         5. Suggest changes to improve the Resume so that it matches the Job Description better.
         6. Recommend relevant topics for interview preparation based on the Job Description.
-        
+
         ### Response Format:
         1. Match Score: [Provide a score out of 10]
         2. Justification: [Provide a detailed analysis of how well the resume matches the job description]
@@ -84,24 +91,18 @@ if resume_text and job_description:
         """
 
         try:
+            # Initialize the generative model
+            model = genai.GenerativeModel('gemini-pro')
 
-            # Initialize the generative model (adjust model name if needed)
-            model = genai.GenerativeModel('gemini-pro')  # Ensure this is the correct model name
-            
             # Generate content using the Gemini API
-            response = genai.generate_content(
-                prompt,
-                temperature=0.3,  # Lower temperature for deterministic results
-                top_p=0.9,        # Nucleus sampling
-                max_output_tokens=500  # Limit response length
-            )
+            response = model.generate_content(prompt)
 
             # Ensure response contains text
             if response and hasattr(response, "text"):
                 st.write(response.text)  # Display the generated response
             else:
                 st.error("No response received from the API.")
-        
+
         except Exception as e:
             st.error(f"API Error: {str(e)}")
 
