@@ -93,7 +93,7 @@ if resume_text and job_description:
 
         try:
             # Initialize the Generative Model
-            model = genai.TextGenerationModel(model='gemini-pro')
+            model = genai.GenerativeModel(model='gemini-pro')
 
             # Generate content using the model
             response = model.generate(prompt=prompt, temperature=0.0, max_output_tokens=500)
