@@ -97,7 +97,7 @@ if resume_text and job_description:
             model = genai.GenerativeModel("gemini-pro")
             
             response = model.generate_content(
-                        prompt=prompt,
+                        prompt,
                         generation_config=genai.types.GenerationConfig(
                             temperature=0.0,          # Ensures deterministic output
                             max_output_tokens=500,    # Limits the response length to 500 tokens
