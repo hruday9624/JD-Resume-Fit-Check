@@ -93,10 +93,18 @@ if resume_text and job_description:
 
         try:
             # Initialize the Generative Model
-            model = genai.GenerativeModel(model='gemini-pro')
+            #model = genai.GenerativeModel(model='gemini-pro')
+            model = genai.GenerativeModel("gemini-pro")
+            
+            response = model.generate_content(
+                        prompt=prompt,
+                        generation_config=genai.types.GenerationConfig(
+                            temperature=0.0,          # Ensures deterministic output
+                            max_output_tokens=500,    # Limits the response length to 500 tokens
+                            candidate_count=1         # Generates only one candidate
+                        )
+                    )
 
-            # Generate content using the model
-            response = model.generate(prompt=prompt, temperature=0.0, max_output_tokens=500)
 
             # Validate and enforce format consistency
             expected_format = r"(1\. \*\*Match Score:\*\* .+\n2\. \*\*Justification:\*\* .+\n3\. \*\*Resume Suggestions:\*\* .+\n4\. \*\*Interview Preparation Topics:\*\* .+)"
