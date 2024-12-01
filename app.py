@@ -84,9 +84,12 @@ if resume_text and job_description:
         """
 
         try:
+
+            # Initialize the generative model (adjust model name if needed)
+            model = genai.GenerativeModel('gemini-pro')  # Ensure this is the correct model name
+            
             # Generate content using the Gemini API
             response = genai.generate_content(
-                model='gemini-pro',
                 prompt=prompt,
                 temperature=0.3,  # Lower temperature for deterministic results
                 top_p=0.9,        # Nucleus sampling
